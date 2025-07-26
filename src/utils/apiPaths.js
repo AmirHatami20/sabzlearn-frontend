@@ -1,5 +1,4 @@
-// export const BASE_URL = "https://sabzlearn-yrz3.onrender.com";
-export const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "https://sabzlearn-fake.liara.run";
 
 // utils/apiPaths.js
 export const API_PATHS = {
