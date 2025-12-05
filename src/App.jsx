@@ -4,8 +4,8 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 import appRoutes from './appRoutes.jsx';
 import ScrollToTop from './components/ScrollToTop.jsx';
-import {ThemeProvider} from "./context/themeContext.jsx";
-import {AuthProvider} from "./context/authContext.jsx";
+import {ThemeProvider} from "./context/ThemeContext.jsx";
+import {AuthProvider} from "./context/AuthContext.jsx";
 import {ToastProvider} from "./components/ToastManager.jsx";
 
 const queryClient = new QueryClient();

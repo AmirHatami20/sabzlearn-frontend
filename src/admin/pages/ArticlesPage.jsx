@@ -3,11 +3,6 @@ import {
     FiFileText,
     FiPlus,
     FiSearch,
-    FiMoreVertical,
-    FiEdit,
-    FiTrash2,
-    FiEye,
-    FiClock,
     FiRefreshCw,
     FiCheck,
 } from 'react-icons/fi';
@@ -50,7 +45,7 @@ const ArticlesPage = () => {
         setFilteredArticles(filtered);
     };
 
-    const handleDeleteArticle = async (articleId) => {
+    const handleDeleteArticle = async () => {
         // if (!confirm('آیا از حذف این مقاله اطمینان دارید؟')) return;
 
         // TODO
