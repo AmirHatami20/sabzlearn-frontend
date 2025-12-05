@@ -1,6 +1,6 @@
 import React from 'react';
 
-function NavbarButton({icon: Icon, onClick,haveZIndex}) {
+function NavbarButton({icon: Icon, onClick, haveZIndex}) {
     return (
         <div
             onClick={onClick}
@@ -9,7 +9,6 @@ function NavbarButton({icon: Icon, onClick,haveZIndex}) {
             }`}
         >
             <Icon/>
-            
         </div>
     );
 }

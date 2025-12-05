@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {Outlet, Link, useLocation, Navigate} from 'react-router-dom';
 import {
     FiHome,
@@ -11,25 +11,26 @@ import {
     FiX,
 } from 'react-icons/fi';
 
-import {AuthContext} from "../../context/AuthContext.jsx";
+import {useAuth} from "../../context/AuthContext.jsx";
 import Overlay from "../../components/Overlay.jsx";
 import FullLoader from "../../components/FullLoader.jsx";
 import {IoIosMenu} from "react-icons/io";
 
 const DashboardLayout = () => {
+    const {user, loading} = useAuth();
+
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const {loading, userInfos} = useContext(AuthContext);
     const location = useLocation();
 
     if (loading) {
         return <FullLoader/>;
     }
 
-    if (!userInfos) {
+    if (!user) {
         return <Navigate to="/login" replace/>;
     }
 
-    if (userInfos?.role !== "ADMIN") {
+    if (user?.role !== "ADMIN") {
         return <Navigate to="/" replace/>;
     }
 

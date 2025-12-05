@@ -1,15 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
     FiUsers,
     FiBookOpen,
     FiFileText,
     FiMessageSquare,
     FiTrendingUp,
-    FiDollarSign
 } from 'react-icons/fi';
-import axios from 'axios';
-import {API_PATHS} from "../../utils/apiPaths.js";
-import axiosInstance from "../../utils/axiosInstance.js";
+
 import CreateArticle from "../components/modals/CreateArticle.jsx";
 import CreateCourse from "../components/modals/CreateCourse.jsx";
 import CreateUser from "../components/modals/CreateUser.jsx";
@@ -23,48 +20,12 @@ const Dashboard = () => {
         recentUsers: [],
         recentCourses: []
     });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const [isShowArticleModal, setIsShowArticleModal] = useState(false);
     const [isShowCourseModal, setIsShowCourseModal] = useState(false);
     const [isShowUserModal, setIsShowUserModal] = useState(false);
 
-    useEffect(() => {
-        fetchDashboardData();
-    }, []);
-
-    const fetchDashboardData = async () => {
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const token = user?.userToken;
-
-            const config = {
-                headers: {Authorization: `Bearer ${token}`}
-            };
-
-            // Fetch all data in parallel
-            const [usersRes, coursesRes, articlesRes] = await Promise.all([
-                axiosInstance.get(API_PATHS.USER.GET_ALL, config),
-                axiosInstance.get(API_PATHS.COURSE.GET_ALL),
-                axiosInstance.get(API_PATHS.ARTICLE.GET_ALL),
-            ]);
-
-            setStats({
-                totalUsers: usersRes.data.length,
-                totalCourses: coursesRes.data.length,
-                totalArticles: articlesRes.data.length,
-                totalComments: 0,
-                recentUsers: usersRes.data.slice(0, 5),
-                recentCourses: coursesRes.data.slice(0, 5)
-            });
-        } catch (error) {
-            console.error('Error fetching dashboard data:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    console.log(stats)
     const StatCard = ({title, value, icon: Icon, color = 'blue', trend = null}) => (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center">

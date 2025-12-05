@@ -13,6 +13,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@tailwindcss/vite": "^4.1.4",
+    "@tanstack/react-query": "^5.90.10",
     "axios": "^1.8.4",
     "plyr": "^3.7.8",
     "react": "^19.0.0",

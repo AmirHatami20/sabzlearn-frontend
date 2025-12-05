@@ -24,7 +24,6 @@ function ContentLayout(
         categories = [],
         loading,
         error,
-        isFetched,
         searchVal = ""
     }
 ) {
@@ -260,7 +259,7 @@ function ContentLayout(
                         <Loader/>
                     ) : error ? (
                         <span className="text-sm mr-14 text-red-500">{error}</span>
-                    ) : visibleItems.length === 0 && isFetched ? (
+                    ) : visibleItems.length === 0 ? (
                         <NoResults
                             text={`متاسفانه ${isCourse ? "دوره‌ای" : "مقاله‌ای"} مطابق با جستجوی شما پیدا نشد ):`}
                         />

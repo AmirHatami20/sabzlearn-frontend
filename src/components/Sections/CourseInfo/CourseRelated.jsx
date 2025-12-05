@@ -1,25 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {useAxios} from "../../../hooks/useAxios.js";
-import {API_PATHS} from "../../../utils/apiPaths.js";
+import React from 'react';
 import Loader from "../../Loader.jsx";
 import {Link} from "react-router-dom";
 
 import {FaArrowLeft} from "react-icons/fa";
+import {useGetRelatedCourses} from "../../../hooks/react-query/course.js";
 
 function CourseRelated({courseId}) {
-    const {request, loading} = useAxios()
-    const [relatedCourses, setRelatedCourses] = useState(null);
+    const {data: relatedCourses = [], isLoading} = useGetRelatedCourses(courseId);
 
-    useEffect(() => {
-        request({
-            method: "GET",
-            url: API_PATHS.COURSE.GET_RELATED(courseId),
-        }).then((res) => {
-            setRelatedCourses(res?.data.splice(0, 4));
-        })
-    }, [])
-
-    if (loading) return <Loader/>;
+    if (isLoading) return <Loader/>;
 
     return (
         <div className="space-y-4 md:space-y-5">

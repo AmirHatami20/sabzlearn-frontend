@@ -1,11 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NavbarButton from "../Navbar/NavbarButton.jsx";
 import {RxHamburgerMenu} from "react-icons/rx";
 import noProfile from "../../assets/images/no-profile.jpg";
 import {IoIosArrowBack, IoIosArrowDown} from "react-icons/io";
 import Overlay from "../../components/Overlay.jsx";
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
-import {AuthContext} from "../../context/AuthContext.jsx";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 function MenuItem({title, name, icon: Icon, children, onClick, href}) {
     const {categoryName} = useParams();
@@ -37,7 +37,7 @@ function NavbarMobile({categories, toggleTheme, themeIcon: Icon}) {
     const [showSidebar, setShowSidebar] = useState(false);
     const [showCategoryId, setShowCategoryId] = useState(null);
 
-    const {isLoginIn} = useContext(AuthContext);
+    const {user} = useAuth();
 
     const toggleSidebar = () => {
         setShowSidebar(prev => !prev);
@@ -70,7 +70,7 @@ function NavbarMobile({categories, toggleTheme, themeIcon: Icon}) {
                 }`}
             >
                 {/* Side-menu header */}
-                {isLoginIn ? (
+                {user ? (
                     <Link
                         to={"/"}
                         className="flex items-center justify-between py-3.5 px-4 bg-gray-100 dark:bg-white/5 mb-5"
@@ -108,7 +108,7 @@ function NavbarMobile({categories, toggleTheme, themeIcon: Icon}) {
 
                 {/* Side-menu list */}
                 <div className="px-6">
-                    {isLoginIn && (
+                    {user && (
                         <ul className="mb-4 pb-4 border-b border-gray-200 space-y-2">
                             <li>
                                 <h6 className="text-sm text-primary font-semibold">دسترسی سریع</h6>

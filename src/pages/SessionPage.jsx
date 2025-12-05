@@ -1,6 +1,6 @@
 import React from 'react';
 
-function SessionPage(props) {
+function SessionPage() {
     return (
         <div></div>
     );

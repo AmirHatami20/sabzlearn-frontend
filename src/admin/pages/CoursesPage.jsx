@@ -7,45 +7,23 @@ import {
     FiCheck,
 } from 'react-icons/fi';
 
-import axiosInstance from "../../utils/axiosInstance.js";
-import {API_PATHS} from "../../utils/apiPaths.js";
-
 import CreateCourse from "../components/modals/CreateCourse.jsx";
 import {FaRegEye} from "react-icons/fa";
 import {GoTrash} from "react-icons/go";
+import {useGetCourses} from "../../hooks/react-query/course.js";
 
 const CoursesPage = () => {
-    const [courses, setCourses] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [filteredCourses, setFilteredCourses] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('ALL');
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const {data:courses = [], isLoading} = useGetCourses();
+    const {data: categories = []} = useGetCourses();
 
     useEffect(() => {
         filterCourses();
     }, [courses, searchTerm, selectedCategory]);
-
-    const fetchData = async () => {
-        try {
-            const [coursesRes, categoriesRes] = await Promise.all([
-                axiosInstance.get(API_PATHS.COURSE.GET_ALL),
-                axiosInstance.get(API_PATHS.CATEGORY.GET_ALL)
-            ]);
-            setCourses(coursesRes.data);
-            setCategories(categoriesRes.data);
-        } catch (error) {
-            console.error('Error fetching courses:', error);
-            alert('خطا در دریافت اطلاعات دوره‌ها');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const filterCourses = () => {
         let filtered = courses;
@@ -65,27 +43,11 @@ const CoursesPage = () => {
     };
 
     const handleDeleteCourse = async (courseId) => {
-        if (!confirm('آیا از حذف این دوره اطمینان دارید؟')) return;
-
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const token = user?.userToken;
-
-            await axiosInstance.delete(API_PATHS.COURSE.DELETE(courseId), {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-
-            setCourses(courses.filter(course => course._id !== courseId));
-            alert('دوره با موفقیت حذف شد');
-        } catch (error) {
-            console.error('Error deleting course:', error);
-            alert('خطا در حذف دوره');
-        }
+        // if (!confirm('آیا از حذف این دوره اطمینان دارید؟')) return;
+        // TODO
     };
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-96">
                 <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
@@ -104,7 +66,6 @@ const CoursesPage = () => {
                     </div>
                     <div className="flex gap-x-3 space-x-reverse">
                         <button
-                            onClick={fetchData}
                             className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                         >
                             <FiRefreshCw className="w-4 h-4 ml-2"/>

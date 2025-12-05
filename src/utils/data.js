@@ -1,12 +1,5 @@
-import {
-    CiHome,
-    CiUser
-} from "react-icons/ci";
-import {
-    IoFolderOpenOutline,
-    IoChatbubblesOutline
-} from "react-icons/io5";
-
+import {CiHome, CiUser} from "react-icons/ci";
+import {IoFolderOpenOutline, IoChatbubblesOutline} from "react-icons/io5";
 
 export const USER_PROFILE_MENU = [
     {id: 1, title: "پیشتخوان", icon: CiHome, href: "/"},
@@ -15,7 +8,6 @@ export const USER_PROFILE_MENU = [
     {id: 4, title: "جزِییات حساب", icon: CiUser, href: "/"},
 ]
 
-// Footer
 export const FOOTER_POPULAR_COURSE = [
     {id: 1, title: "آموزش پایتون", href: "/python"},
     {id: 2, title: "دوره طراحی قالب", href: "/design"},

@@ -1,6 +1,5 @@
 @import "tailwindcss";
-
-@import 'swiper/swiper-bundle.css';
+@import "swiper/swiper-bundle.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

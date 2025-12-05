@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 function ContentHeader({title, color = "#000", icon: Icon, button, buttonText, buttonIcon: ButtonIcon, onClick}) {
     return (
         <div className="flex items-center justify-between gap-x-2 mb-5 sm:mb-7 relative">

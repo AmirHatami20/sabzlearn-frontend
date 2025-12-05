@@ -15,7 +15,6 @@ function Hero() {
     const navigate = useNavigate();
     const [searchValue, setSearchValue] = useState('');
 
-
     const handleSearch = (e) => {
         e.preventDefault();
 

@@ -12,18 +12,13 @@ import {
     FiCheck,
 } from 'react-icons/fi';
 
-import axiosInstance from "../../utils/axiosInstance.js";
-import {API_PATHS} from "../../utils/apiPaths.js";
-
 import CreateArticle from "../components/modals/CreateArticle.jsx";
 import {FaRegEye} from "react-icons/fa";
 import {GoTrash} from "react-icons/go";
+import {useGetArticles} from "../../hooks/react-query/article.js";
+import {useGetCategories} from "../../hooks/react-query/category.js";
 
 const ArticlesPage = () => {
-    const [articles, setArticles] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
-
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const [filteredArticles, setFilteredArticles] = useState([]);
@@ -31,29 +26,12 @@ const ArticlesPage = () => {
 
     const [selectedCategory, setSelectedCategory] = useState('ALL');
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+    const {data: articles = [], isLoading} = useGetArticles();
+    const {data: categories = []} = useGetCategories();
 
     useEffect(() => {
         filterArticles();
     }, [articles, searchTerm, selectedCategory]);
-
-    const fetchData = async () => {
-        try {
-            const [articlesRes, categoriesRes] = await Promise.all([
-                axiosInstance.get(API_PATHS.ARTICLE.GET_ALL),
-                axiosInstance.get(API_PATHS.CATEGORY.GET_ALL)
-            ]);
-            setArticles(articlesRes.data);
-            setCategories(categoriesRes.data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            alert('خطا در دریافت اطلاعات');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const filterArticles = () => {
         let filtered = articles;
@@ -73,28 +51,12 @@ const ArticlesPage = () => {
     };
 
     const handleDeleteArticle = async (articleId) => {
-        if (!confirm('آیا از حذف این مقاله اطمینان دارید؟')) return;
+        // if (!confirm('آیا از حذف این مقاله اطمینان دارید؟')) return;
 
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const token = user?.userToken;
-
-            await axiosInstance.delete(API_PATHS.ARTICLE.DELETE(articleId), {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-
-            setArticles(articles.filter(article => article._id !== articleId));
-            setShowDropdown(null);
-            alert('مقاله با موفقیت حذف شد');
-        } catch (error) {
-            console.error('Error deleting article:', error);
-            alert('خطا در حذف مقاله');
-        }
+        // TODO
     };
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-96">
                 <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
@@ -115,7 +77,6 @@ const ArticlesPage = () => {
                     </div>
                     <div className="flex gap-x-3 space-x-reverse">
                         <button
-                            onClick={fetchData}
                             className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                         >
                             <FiRefreshCw className="w-4 h-4 ml-2"/>

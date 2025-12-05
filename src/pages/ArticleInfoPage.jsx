@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ArticleInfoPage(props) {
+function ArticleInfoPage() {
     return (
         <div></div>
     );

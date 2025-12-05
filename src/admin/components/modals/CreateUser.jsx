@@ -1,7 +1,5 @@
 import {Dialog, Transition} from '@headlessui/react';
 import {Fragment, useState} from 'react';
-import axiosInstance from "../../../utils/axiosInstance.js";
-import {API_PATHS} from "../../../utils/apiPaths.js";
 
 const CreateUser = ({isOpen, setIsOpen}) => {
     const [form, setForm] = useState({
@@ -11,7 +9,6 @@ const CreateUser = ({isOpen, setIsOpen}) => {
         password: '',
         role: '',
     });
-
     const [loading, setLoading] = useState(false);
 
     const handleChange = e => {
@@ -21,24 +18,7 @@ const CreateUser = ({isOpen, setIsOpen}) => {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        setLoading(true);
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const token = user?.userToken;
-
-            await axiosInstance.post(API_PATHS.USER.CREATE, form, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            alert('کاربر با موفقیت ایجاد شد ✔️');
-            setIsOpen(false);
-        } catch (err) {
-            console.error(err);
-            alert('خطا در ایجاد کاربر ❗');
-        } finally {
-            setLoading(false);
-        }
+        // TODO
     };
 
     return (

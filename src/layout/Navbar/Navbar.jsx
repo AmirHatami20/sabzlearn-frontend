@@ -1,4 +1,4 @@
-import {useCallback, useContext, useEffect, useState} from 'react';
+import {useCallback} from 'react';
 import {Link, useLocation} from "react-router-dom";
 
 import {BsMoon, BsSun} from "react-icons/bs";
@@ -6,7 +6,6 @@ import {HiOutlineUser} from "react-icons/hi2";
 import {LiaAngleLeftSolid} from "react-icons/lia";
 
 import logo from '../../assets/images/logo.png';
-import {API_PATHS} from "../../utils/apiPaths.js";
 
 import NavbarButton from "./NavbarButton.jsx";
 import NavbarUserBasket from "./NavbarUserBasket.jsx";
@@ -14,36 +13,21 @@ import NavbarUserProfile from "./NavbarUserProfile.jsx";
 import NavbarMobile from "../MobilePanels/NavbarMobile.jsx";
 import NavbarSearch from "./NavbarSearch.jsx";
 
-import {useTheme} from "../../context/ThemeContext.jsx";
-import {AuthContext} from "../../context/AuthContext.jsx";
-import {useAxios} from "../../hooks/useAxios.js";
-
+import {useGetCategories} from "../../hooks/react-query/category.js";
+import {useTheme} from "../../context/themeContext.jsx";
+import {useAuth} from "../../context/AuthContext.jsx";
 
 function Navbar() {
-    const {isLoginIn, userInfos, loading} = useContext(AuthContext);
-    const {theme, setTheme} = useTheme();
-    const [categories, setCategories] = useState([]);
+    const {user, loading} = useAuth();
+    const {dark, toggleTheme} = useTheme();
+    const {data: categories = []} = useGetCategories();
 
     const location = useLocation();
-    const {request} = useAxios();
 
     const isActive = useCallback(
         (path) => location.pathname === path,
         [location.pathname]
     );
-
-    const toggleTheme = useCallback(() => {
-        setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
-    }, [setTheme]);
-
-    useEffect(() => {
-        request({
-            method: "GET",
-            url: API_PATHS.CATEGORY.GET_ALL,
-        }).then((res) => {
-            setCategories(res.data);
-        })
-    }, []);
 
     const renderCategoryDropdown = () => (
         <li className="relative group/sub-menu">
@@ -95,7 +79,7 @@ function Navbar() {
                         <div className="flex lg:hidden">
                             <NavbarMobile
                                 categories={categories}
-                                themeIcon={theme === "light" ? BsMoon : BsSun}
+                                themeIcon={dark ? BsSun : BsMoon}
                                 toggleTheme={toggleTheme}
                             />
                         </div>
@@ -137,7 +121,7 @@ function Navbar() {
                             {/* Theme Toggle */}
                             <div className="py-2 hidden lg:flex">
                                 <NavbarButton
-                                    icon={theme === "light" ? BsMoon : BsSun}
+                                    icon={dark ? BsSun : BsMoon}
                                     onClick={toggleTheme}
                                 />
                             </div>
@@ -150,8 +134,8 @@ function Navbar() {
                             {/* User Info */}
                             <div className="relative py-2 hidden lg:flex">
                                 <div className="relative py-2 hidden lg:flex">
-                                    {isLoginIn ? (
-                                        <NavbarUserProfile user={userInfos}/>
+                                    {user ? (
+                                        <NavbarUserProfile user={user}/>
                                     ) : (
                                         <Link
                                             to="/login"

@@ -1,9 +1,8 @@
 import {Dialog, Transition} from '@headlessui/react';
-import {Fragment, useEffect, useState} from 'react';
+import {Fragment, useState} from 'react';
 
-import axiosInstance from "../../../utils/axiosInstance.js";
-import {API_PATHS} from "../../../utils/apiPaths.js";
 import {FiImage} from "react-icons/fi";
+import {useGetCategories} from "../../../hooks/react-query/category.js";
 
 const CreateArticle = ({isOpen, setIsOpen}) => {
     const [form, setForm] = useState({
@@ -15,22 +14,8 @@ const CreateArticle = ({isOpen, setIsOpen}) => {
         author: '',
     });
     const [image, setImage] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [categories, setCategories] = useState([]);
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await axiosInstance.get(API_PATHS.CATEGORY.GET_ALL);
-                setCategories(res.data);
-            } catch (error) {
-                console.error('Error fetching categories:', error);
-                alert('خطا در دریافت دسته‌بندی‌ها');
-            }
-        };
-
-        fetchCategories();
-    }, []);
+    const {data:categories, isLoading} = useGetCategories()
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -43,31 +28,7 @@ const CreateArticle = ({isOpen, setIsOpen}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        setLoading(true);
-        try {
-            const formData = new FormData();
-            Object.entries(form).forEach(([key, value]) => formData.append(key, value));
-            if (image) formData.append('image', image);
-
-            const user = JSON.parse(localStorage.getItem("user"));
-            const token = user?.userToken;
-
-            await axiosInstance.post(API_PATHS.ARTICLE.CREATE, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    authorization: `Bearer ${token}`
-                }
-            })
-
-            alert('Article created successfully ✔️');
-            setIsOpen(false);
-        } catch (err) {
-            console.error(err);
-            alert('Error creating article ❗');
-        } finally {
-            setLoading(false);
-        }
+        // TODO
     };
 
     return (
@@ -177,10 +138,10 @@ const CreateArticle = ({isOpen, setIsOpen}) => {
                                     </div>
                                     <button
                                         type="submit"
-                                        disabled={loading}
+                                        disabled={isLoading}
                                         className="w-full bg-primary hover:bg-blue-700 transition-colors text-white py-2 rounded mt-4"
                                     >
-                                        {loading ? 'در حال ارسال...' : 'ثبت مقاله'}
+                                        {isLoading ? 'در حال ارسال...' : 'ثبت مقاله'}
                                     </button>
                                 </form>
                             </Dialog.Panel>

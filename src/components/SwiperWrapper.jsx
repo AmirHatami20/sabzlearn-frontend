@@ -22,7 +22,7 @@ function SwiperWrapper({items}) {
         <div className="swiper-container">
             <Swiper
                 ref={sliderRef}
-                loop={items.length > 4}
+                loop={items?.length > 4}
                 spaceBetween={24}
                 slidesPerView={1}
                 modules={[Autoplay]}

@@ -1,25 +1,12 @@
-import React, {useEffect, useState} from "react";
-import {API_PATHS} from "../../../utils/apiPaths.js";
+import React from "react";
 
 import SectionHeader from "./SectionHeader.jsx";
 import SwiperWrapper from "../../SwiperWrapper.jsx";
 import Loader from "../../Loader.jsx";
-
-import {useAxios} from "../../../hooks/useAxios.js";
+import {useGetCourses} from "../../../hooks/react-query/course.js";
 
 function PopularCourses() {
-    const [allPopularCourses, setAllPopularCourses] = useState([]);
-    const {request, loading, error} = useAxios();
-
-    useEffect(() => {
-        request({
-            url: API_PATHS.COURSE.GET_ALL,
-            method: "get",
-        }).then((res) => {
-            setAllPopularCourses(res.data?.slice(0, 12));
-        })
-    }, [])
-
+    const {data: courses, isLoading, error} = useGetCourses();
 
     return (
         <section className="section-wrapper">
@@ -30,13 +17,13 @@ function PopularCourses() {
                 />
 
                 {/* Swiper */}
-                {loading ? (
+                {isLoading ? (
                     <Loader/>
                 ) : error ? (
                     <span className="text-sm mr-14 text-red-500">{error}</span>
                 ) : (
                     <SwiperWrapper
-                        items={allPopularCourses}
+                        items={courses}
                     />
                 )}
             </div>

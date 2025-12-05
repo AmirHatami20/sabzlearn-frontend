@@ -5,6 +5,8 @@ import {toPersianNumber} from "../../../utils/helper.js";
 import Plyr from 'plyr';
 import 'plyr/dist/plyr.css';
 import CountDownTimer from "../../CountDownTimer.jsx";
+import {useAddToCart} from "../../../hooks/react-query/cart.js";
+import {toast} from "../../ToastManager.jsx";
 
 function VideoPlayer({src, poster}) {
     const videoRef = useRef(null);
@@ -41,7 +43,19 @@ function VideoPlayer({src, poster}) {
     );
 }
 
-function CourseHeader({title, description, price, poster, discount, discountExp}) {
+function CourseHeader({courseId, title, description, price, poster, discount, discountExp}) {
+    const addToCartMutation = useAddToCart();
+
+    const handleAddToCart = () => {
+        addToCartMutation.mutate(courseId, {
+            onSuccess: () => {
+                toast("مصحول به سبد شما اضافه شد.", "success");
+            },
+            onError: (err) => {
+                toast(err.response?.data?.message || "خطا", "error")
+            }
+        })
+    }
     return (
         <section
             className="grid grid-cols-1 lg:grid-cols-2 gap-y-4.5 gap-x-6 sm:gap-x-7 lg:items-center xl:items-stretch mt-8 sm:mt-10 rounded-xl p-4.5 lg:p-0 bg-white dark:bg-primary-dark lg:!bg-transparent">
@@ -75,12 +89,18 @@ function CourseHeader({title, description, price, poster, discount, discountExp}
                         className="flex justify-center xl:items-center lg:justify-between flex-wrap-reverse gap-y-4 gap-x-6"
                     >
                         <button
-                            onClick={() => {
-                            }}
+                            onClick={handleAddToCart}
                             className="flex items-center justify-center gap-x-3 py-3 px-4 bg-primary w-full md:w-max text-white rounded-lg"
+                            disabled={addToCartMutation.isPending}
                         >
-                            <HiOutlineAcademicCap className="text-2xl"/>
-                            افزودن به سبد خرید
+                            {addToCartMutation.isPending ? (
+                                <span>منتظر بمانید...</span>
+                            ) : (
+                                <>
+                                    <HiOutlineAcademicCap className="text-2xl"/>
+                                    افزودن به سبد خرید
+                                </>
+                            )}
                         </button>
                         <div className="flex items-end gap-x-2.5">
                             {discount > 0 ? (

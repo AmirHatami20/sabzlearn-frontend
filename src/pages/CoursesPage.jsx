@@ -1,33 +1,13 @@
-import {useEffect, useState} from 'react';
 import ContentLayout from "../layout/ContentLayout.jsx";
-import {useAxios} from "../hooks/useAxios.js";
-import {API_PATHS} from "../utils/apiPaths.js";
 import {useSearchParams} from "react-router-dom";
+import {useGetCategories} from "../hooks/react-query/category.js";
+import {useGetCourses} from "../hooks/react-query/course.js";
 
 function CoursesPage() {
-    const {request, loading, error} = useAxios();
-    const [items, setItems] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [isFetched, setIsFetched] = useState(false);
+    const {categories} = useGetCategories();
+    const {data: courses, isLoading, error} = useGetCourses();
     const [searchParams] = useSearchParams();
     const searchQuery = searchParams.get("s") || "";
-
-    useEffect(() => {
-        request({
-            url: API_PATHS.COURSE.GET_ALL,
-            method: "get",
-        }).then((res) => {
-            setItems(res.data);
-            setIsFetched(true);
-        })
-
-        request({
-            url: API_PATHS.CATEGORY.GET_ALL,
-            method: "get",
-        }).then((res) => {
-            setCategories(res.data);
-        })
-    }, [])
 
     return (
         <ContentLayout
@@ -39,11 +19,10 @@ function CoursesPage() {
                 {id: 3, title: "گران ترین", value: "expensive"},
                 {id: 4, title: "پر مخاطب ترین", value: "popular"},
             ]}
-            items={items}
+            items={courses}
             categories={categories}
-            loading={loading}
+            loading={isLoading}
             error={error}
-            isFetched={isFetched}
             searchVal={searchQuery}
         />
     );

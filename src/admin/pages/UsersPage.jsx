@@ -7,47 +7,19 @@ import {
     FiCheck,
 } from 'react-icons/fi';
 
-import axiosInstance from "../../utils/axiosInstance.js";
-import {API_PATHS} from "../../utils/apiPaths.js";
-
 import CreateUser from "../components/modals/CreateUser.jsx";
 import {GoTrash} from "react-icons/go";
+import {useGetUsers} from "../../hooks/react-query/user.js";
 
 const UsersPage = () => {
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const {data: users = [], isLoading} = useGetUsers()
+
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
     useEffect(() => {
         filterUsers();
     }, [users, searchTerm]);
-
-    const fetchData = async () => {
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const token = user?.userToken;
-
-            const [usersRes] = await Promise.all([
-                axiosInstance.get(API_PATHS.USER.GET_ALL, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    }
-                }),
-            ]);
-            setUsers(usersRes.data);
-        } catch (error) {
-            console.error('Error fetching users/roles:', error);
-            alert('خطا در دریافت اطلاعات کاربران');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const filterUsers = () => {
         let filtered = users;
@@ -63,23 +35,11 @@ const UsersPage = () => {
     };
 
     const handleDeleteUser = async (userId) => {
-        if (!confirm('آیا از حذف این کاربر اطمینان دارید؟')) return;
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const token = user?.userToken;
-
-            await axiosInstance.delete(API_PATHS.USER.DELETE(userId), {
-                headers: {Authorization: `Bearer ${token}`},
-            });
-            setUsers(prev => prev.filter(u => u._id !== userId));
-            alert('کاربر با موفقیت حذف شد');
-        } catch (error) {
-            console.error('Error deleting user:', error);
-            alert('خطا در حذف کاربر');
-        }
+        // if (!confirm('آیا از حذف این کاربر اطمینان دارید؟')) return;
+        // TODO
     };
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-96">
                 <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"/>
@@ -98,7 +58,6 @@ const UsersPage = () => {
                     </div>
                     <div className="flex gap-x-3 space-x-reverse">
                         <button
-                            onClick={fetchData}
                             className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm rounded-md text-gray-700 bg-white hover:bg-gray-50"
                         >
                             <FiRefreshCw className="w-4 h-4 ml-2"/>
