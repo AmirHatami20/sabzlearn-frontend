@@ -14,7 +14,7 @@ import NavbarMobile from "../MobilePanels/NavbarMobile.jsx";
 import NavbarSearch from "./NavbarSearch.jsx";
 
 import {useGetCategories} from "../../hooks/react-query/category.js";
-import {useTheme} from "../../context/themeContext.jsx";
+import {useTheme} from "../../context/ThemeContext.jsx";
 import {useAuth} from "../../context/AuthContext.jsx";
 
 function Navbar() {
